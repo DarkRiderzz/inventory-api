@@ -24,13 +24,6 @@ app.use(
   })
 );
 
-// app.use(
-//   cors({
-//     origin: "*", // Allow all origins
-//     credentials: true,
-//   })
-// );
-
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
