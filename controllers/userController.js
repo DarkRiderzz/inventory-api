@@ -11,7 +11,7 @@ const mailSender = require("../utils/mailSender");
 
 // Generate Token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "90d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
 const sendOTP = async (req, res) => {
@@ -156,8 +156,9 @@ const registerUser = asyncHandler(async (req, res) => {
     path: "/",
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 86400), // 1 day
-    sameSite: "none",
+    sameSite: "None",
     secure: true,
+    domain: ".invt-app.netlify.app",
   });
 
   if (user) {
@@ -209,7 +210,7 @@ const loginUser = asyncHandler(async (req, res) => {
       expires: new Date(Date.now() + 1000 * 86400), // 1 day
       sameSite: "None",
       secure: true,
-      domain: "invt-app.netlify.app",
+      domain: ".invt-app.netlify.app",
     });
   }
   if (user && passwordIsCorrect) {
@@ -235,7 +236,8 @@ const logout = asyncHandler(async (req, res) => {
     path: "/",
     httpOnly: true,
     expires: new Date(0),
-    sameSite: "none",
+    sameSite: "None",
+    domain: ".invt-app.netlify.app",
     secure: true,
   });
   return res.status(200).json({ message: "Successfully Logged Out" });
