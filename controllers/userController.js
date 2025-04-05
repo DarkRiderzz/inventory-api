@@ -88,10 +88,10 @@ const sendOTP = async (req, res) => {
 };
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, otp } = req.body;
+  const { name, email, password } = req.body;
 
   // Validation
-  if (!name || !email || !password || !otp) {
+  if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please fill in all required fields");
   }
@@ -99,46 +99,6 @@ const registerUser = asyncHandler(async (req, res) => {
   if (password.length < 6) {
     res.status(400);
     throw new Error("Password must be up to 6 characters");
-  }
-
-  // Check if user email already exists
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    res.status(400);
-    throw new Error("Email has already been registered");
-  }
-
-  //find the most recent OTP stored for the user
-  // .sort({ createdAt: -1 }):
-  // It's used to sort the results based on the createdAt field in descending order (-1 means descending).
-  // This way, the most recently created OTP will be returned first.
-  // .limit(1): It limits the number of documents returned to 1.
-  const recentOtp = await OTP.findOne({ email }).sort({ createdAt: -1 });
-
-  if (recentOtp === null) {
-    return res.status(400).json({
-      success: false,
-      message: "Please Provide valid email",
-    });
-  }
-
-  // console.log(recentOtp);
-
-  //validate OTP
-  // console.log("opt is:" + otp);
-  // console.log("recent opt is" + recentOtp.otp);
-  if (!recentOtp) {
-    return res.status(400).json({
-      success: false,
-      message: "OTP not found",
-    });
-  } else if (otp !== recentOtp.otp) {
-    //Invalid OTP
-    return res.status(400).json({
-      success: false,
-      message: "invalid OTP",
-    });
   }
 
   // Create new user
